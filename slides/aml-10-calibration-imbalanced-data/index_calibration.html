@@ -15,13 +15,13 @@
 
 class: center, middle
 
-### W4995 Applied Machine Learning
+### Applied Machine Learning
 
-# Calibration, Imbalanced Data
+# Calibration
 
-03/02/20
+Presented by Martin Gubri
 
-Andreas C. Müller
+Slides by Andreas C. Müller available under CC-0 on [www.cs.columbia.edu/~amueller](https://www.cs.columbia.edu/~amueller/comsw4995s20/schedule/)
 
 ???
 Today we'll expand on the model evaluation topic we started last week,
@@ -70,6 +70,8 @@ Predicting%20good%20probabilities%20with%20supervised%20learning.pdf">Source</a>
 
 - “The model predicted you don’t have cancer” vs “The model predicted you’re 40% likely to have cancer”
 
+- Confidence and uncertainty on the prediction
+
 ???
 So the next thing I want to talk about is calibrations.
 Calibration also builds a model on top of a model. But the
@@ -102,6 +104,16 @@ and use it to estimate probabilities, if it says “this is
 the model is not really trained to optimize probability
 estimates so the probability estimates could be off quite a
 bit.
+
+---
+class: spacious
+#Calibration definition
+
+**Definition**: Calibration is the post-processing of a model to get more accurate probability estimates
+
+Well calibrated classifiers are probabilistic classifiers for which the predicted probability can be directly interpreted as a confidence level. 
+
+> [E.g.](https://scikit-learn.org/stable/modules/calibration.html), a well calibrated (binary) classifier should classify the samples such that among the samples to which it gave a predicted probability close to 0.8, approximately 80% actually belong to the positive class.
 
 ---
 class: spacious
