@@ -63,7 +63,7 @@ FIXME Move keras from next lecture to this lecture, clean up this leacture. get 
 
   – Some improvements:
     - relu
-    - Drop-out
+    - drop-out
     - adam
     - batch-normalization
     - residual networks
@@ -112,6 +112,8 @@ The dramatic shift that we've seen is mostly due to the availability of data and
 .center[
 ![:scale 40%](images/log_reg_nn.png)
 ]
+
+`$ o(x) = g(wx + b) $`
 
 ???
 Before I introduce you to neural networks, I want to
@@ -257,29 +259,25 @@ places, which makes it hard to optimize.
 
 - Non-linear models for classification and regression
 
-- Work well for very large datasets
-
-- Non-convex optimization
-
-- Notoriously slow to train – need for GPUs
-
-- Use dot products etc require preprocessing, → similar to
-SVM or linear models, unlike trees
-
-- MANY variants (Convolutional nets, Gated Recurrent neural
-networks, Long-Short-Term Memory, recursive neural
-networks, variational autoencoders, generative adverserial
-networks, deep reinforcement learning, ...)
-
 ???
-
 I want to give you a brief overview of what these models are
 for before we dive into more details. These are non-linear
 models that can be used for classification and regression.
 They can also be used for much more, but we'll not talk
 about this in this class. They are what's called universal
 approximators, so they can model, i.e. overfit any function,
-like trees or RBF Kernel SVMs. They work particularly well
+like trees or RBF Kernel SVMs. 
+
+--
+
+- Work well for very large datasets
+
+- Non-convex optimization
+
+- Notoriously slow to train – need for GPUs
+
+???
+They work particularly well
 for very large datsets, usually with at least tens of
 thousands of samples, or even millions of examples. They
 require solving a non-convex optimization problem, so the
@@ -297,6 +295,12 @@ you need to have the right hardware, so you can either use a
 cluster or GPU cloud resources or maybe your gaming PC with
 an Nvidia card.
 
+--
+
+- Require preprocessing → similar to
+SVM or linear models, unlike trees
+
+???
 State of the art models in computer vision and audio take
 days or even weeks to train, often on multiple GPUs. In a
 sense, neural networks are quite related to linear models,
@@ -306,7 +310,14 @@ continuous and scaled. Neural networks, probably because of
 the non-convex optimization, are actually much more
 sensitive to scaling than linear models in practice.
 
+--
 
+- MANY variants (Convolutional nets, Gated Recurrent neural
+networks, Long-Short-Term Memory, recursive neural
+networks, variational autoencoders, generative adverserial
+networks, deep reinforcement learning, ...)
+
+???
 And finally, as I said earier, there are many many different
 variants of this. Neural networks, or deep learning, is
 really an umbrella term that describes a large number of
@@ -337,7 +348,7 @@ human.
 
 `$$ =\min_{W_1,W_2,b_1,b_2} \sum\limits_{i=1}^N l(y_i,g(W_2f(W_1x+b_1)+b_2)$$`
 --
-- `$l$` Squared loss for regression. Cross-entropy loss for classification
+- `$l$`: Squared loss for regression. Cross-entropy loss for classification
 
 ???
 So how are we going to learn these parameters, these weights
@@ -464,6 +475,8 @@ answer earlier)
 class: compact
 #Optimizing W, b
 
+**Gradient Descent:**
+
 Batch
 `$$ W_i \leftarrow W_i - \eta\sum\limits_{j=1}^N \frac{\partial l(x_j,y_j)}{\partial W_i} $$`
 <br />
@@ -475,7 +488,7 @@ Online/Stochastic
 
 --
 
-Minibatch
+Minibatch (`$m$` examples)
 `$$ W_i \leftarrow W_i - \eta\sum\limits_{j=k}^{k+m} \frac{\partial l(x_j,y_j)}{\partial W_i}$$`
 
 
@@ -527,15 +540,13 @@ class:spacious
 
 - Constant `$\eta$` not good
 
-- Can decrease `$\eta$`
+- Good to decrease `$\eta$`
+  - bigger steps in the beginning and smaller steps in the end
 
-- Better: adaptive `$\eta$` for each entry if W_i
+- Better: adaptive `$\eta$` for each entry of W_i
+  - Golden standard: adam (with magic numbers, [paper](https://arxiv.org/pdf/1412.6980.pdf))
 
-- State-of-the-art: adam (with magic numbers)
-
-- https://arxiv.org/pdf/1412.6980.pdf
-
-- http://sebastianruder.com/optimizing-gradient-descent/
+- More details: https://ruder.io/optimizing-gradient-descent/
 ???
 As with linear models, tuning the learning rate is a major
 issue here, so finding a good value of eta.
@@ -572,9 +583,11 @@ class:spacious
 
 - Small dataset: off the shelf like l-bfgs
 
-- Big dataset: adam / rmsprop
+- Big dataset: adam / gradient descent with momentum
 
-- Have time &amp; nerve: tune the schedule
+- Tune the learning rate schedule
+  - require time &amp; nerve
+  - but learning rate is the most important hyperparameter
 
 ???
 So for large datasets, something like adam or rmsprop is
@@ -622,7 +635,7 @@ print(mlp.score(X_test, y_test))
 So lets start with some toy data. Here's my favorite two
 moons dataset.
 
-- Don’t user sklearn for anything but toy problems in
+- Don’t use sklearn for anything but toy problems in
 neural nets.
 ---
 #Random State
@@ -774,11 +787,15 @@ class:spacious
 
 - Number of parameters
 
-- Regularization
+- Regularization: penalize large parameter values
 
 - Early Stopping
+.smaller[
+- stop training when it starts to overfit (based on a validation set)
+- work well in practice, but entangle complexity and convergence controls
+]
 
-- (drop-out)
+- (Drop-out)
 
 ???
 These are the main ways to control complexity.
@@ -1038,13 +1055,12 @@ intermediate results and gradient computations.
 
 - Choices (right now):
 
-  - TensorFlow
+  - PyTorch
 
-  - PyTorch / Torch
+  - TensorFlow
 
   - Chainer
 
-  - (Theano)
 
 ???
 So create deep learning model efficiently, I need
@@ -1067,17 +1083,13 @@ tensorflow got released.
 ---
 #Deep Learning Libraries
 
+- PyTorch (torch): my recommandation
 
-- Keras (Tensorflow, CNTK, Theano)
-
-- PyTorch (torch)
+- Keras (Tensorflow, CNTK)
 
 - Chainer (chainer)
 
 - MXNet (MXNet)
-
-- Also see:
-http://mxnet.io/architecture/program_model.html
 
 
 ???
